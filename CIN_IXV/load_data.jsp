@@ -1,0 +1,33 @@
+<%@page contentType="application/xml; charset=UTF-8" %>
+<jsp:useBean id="VLXGenerator" class="com.VDK.JavaSample.VLXGenerator" scope="request">
+</jsp:useBean>
+<% 
+
+//Retrieve the query string parameters passed back to us
+String strAction = request.getParameter("action");
+String resultVLX = null;
+
+if(strAction == null || strAction.equals(""))
+	resultVLX = "Unknown action argument. Please specify 'show_company' or 'show_person'... etc.";
+else
+{
+	if(strAction.equals("show_company") || strAction.equals("expand_company")) {
+		String strCompanyId = request.getParameter("company_id");
+		resultVLX = VLXGenerator.showCompany(strCompanyId);
+	}
+
+	if(strAction.equals("show_person") || strAction.equals("expand_person")) {
+		String strPersonId = request.getParameter("person_id");
+		resultVLX = VLXGenerator.showPerson(strPersonId);
+	}
+}
+
+//searchEntity will call down to the VLXGenerator class which generates a
+//string of VLX based on the search criteria passed
+//String resultVLX = VLXGenerator.getData();
+if(resultVLX==null)
+	out.print(VLXGenerator.getLastError());
+else
+	out.print(resultVLX);
+
+%>
